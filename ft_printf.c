@@ -3,79 +3,119 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: evarache <evarache@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: elsa <elsa@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 13:42:04 by evarache          #+#    #+#             */
-/*   Updated: 2025/12/03 15:18:54 by evarache         ###   ########.fr       */
+/*   Updated: 2025/12/04 18:17:23 by elsa             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <stdarg.h>
+#include "ft_printf.h"
 
-int	count_carac(char *str, char c)
+
+char	type_convert(char c)
 {
-	int i;
-	int count;
-	
-	i = 0;
-	count = 0;
-	while (str[i])
-	{
-		if (str[i] == c)
-			count++;
-		i++;
-	}
+	if (c == 'c' || c == 's' || c == 'p' || 
+		c == 'd' || c == 'i' || c == 'u' || 
+		c == 'x' || c == 'X' || c == '%')
+		return (c);
+	return (0);
+}
+
+int	call_print_convert(va_list *args, char c)
+{
+	int count = 0;
+	if (c == 'c')
+		count += ft_putchar((char)(va_arg(*args, int)));
+	else if (c == 's')
+		count += ft_putstr(va_arg(*args, char*));
+	//else if (c == 'p')
+		//count += ft_putadress(va_arg(*args, char*));
+	else if (c == 'd' || c == 'i')
+		count += ft_putnbr_base(va_arg(*args, long), 10, "0123456789");
+	else if (c == 'u')
+		count += ft_putnbr_base(va_arg(*args, long), 10, "0123456789");
+	else if (c == 'x')
+		count += ft_putnbr_base(va_arg(*args, long), 16, "0123456789abcdef");
+	else if (c == 'X')
+		count += ft_putnbr_base(va_arg(*args, long), 16, "0123456789ABCDEF");
+	else if (c == '%')
+		count += ft_putchar('%');
 	return (count);
+	
 }
 
-char	type_conversion(char *str, int index)
-{
-	char	type_conv;
-	
-	while(str[index])
-	{
-		if (str[index] == '%')
-		{
-			type_conv = str[index + 1];
-			break ;
-		}
-		index ++;
-	}
-	if (type_conv != 'c' && type_conv != 's' && type_conv != 'p' &&
-		type_conv != 'd' && type_conv != 'i' && type_conv != 'u' && 
-		type_conv != 'x' && type_conv != 'X' && type_conv != '%')
-		return (NULL);
-	return (type_conv);
-	
-}
 
 int	ft_printf(const char *format, ...)
 {
 	va_list args;
 	int 	i;
-	int 	n_arg;
+	int		count_nb_print;
 
 	i = 0;
-	n_arg = 0;
+	count_nb_print = 0;
 	va_start(args, format);
 	
-	
-	// pour parcourir les arguments
-	while (i < count_carac((char *)format, '%'))  // on parcoure le nombres d'arguments
+	while (format[i])
 	{
-        printf("%c ", va_arg(args, int));  // avance de 1 arg a chaque appel
+		if (format[i] == '%')
+		{
+			i++;
+			if (type_convert(format[i]))
+			{
+				count_nb_print += call_print_convert(&args, format[i++]);
+				continue ;
+			}
+		}
+		else 
+			ft_putchar(format[i]);
 		i++;
+		count_nb_print++;
 	}
+	
 	va_end(args);
-	return (0);
+	return (count_nb_print);
 }
 
 
 
 int main()
 {
-	//printf("%d\n", count_carac("hfdgf%khafk%kaba%%kb%", '%'));
-	ft_printf("c%ou%co%u", 'c', 'u', 'i');
+	int test1 = ft_printf("chat%kon %c\n", 42, 'y');
+	int test1_bis = printf("chat%kon %c\n", 42, 'y');
+
+	// ft_printf("chat %s on %c\n", "youpi", 'y');
+	// printf("chat %s on %c\n", "youpi", 'y');
+
+	int test2 = ft_printf("chat %d on %c\n", -89, 'y');
+	int test2_bis = printf("chat %d on %c\n", -89, 'y');
+
+	printf("%d\n", test1);
+	printf("%d\n", test1_bis);
+
+	printf("%d\n", test2);
+	printf("%d\n", test2_bis);
+	
+	
+	int test3 = ft_printf("chat %i on %c, bfsbj %% jjhfghis %cosvn, %d jvsvnos, %xfnwfn%X\n", 89, 'y', "chat", 12, 89);
+	int test3_bis = printf("chat %i on %c, bfsbj %% jjhfghis %cosvn, %d jvsvnos, %xfnwfn%X\n", 89, 'y', "chat", 12, 89);
+	
+	printf("%d\n", test3);
+	printf("%d\n", test3_bis);
+	
+	// ft_printf("chat %i on %c\n", -89,8, 'y');
+	// printf("chat %i on %c\n", -89,8, 'y');
+
+	//int test = 56489; //=> 1101010010101010101 => 432312 => DSF
+
+	// ft_printf("chat %x on %c\n", test, 'y');
+	// printf("chat %x on %c\n", test, 'y');
+	
+	// ft_printf("chat %X on %c\n", test, 'y');
+	// printf("chat %X on %c\n", test, 'y');
+
+	// ft_printf("chat %p on %c\n", test, 'y');
+	// printf("chat %p on %c\n", test, 'y');
 	return (0);
 }
