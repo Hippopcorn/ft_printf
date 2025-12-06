@@ -6,19 +6,19 @@
 /*   By: elsa <elsa@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 09:12:41 by elsa              #+#    #+#             */
-/*   Updated: 2025/12/06 12:46:07 by elsa             ###   ########.fr       */
+/*   Updated: 2025/12/06 18:37:26 by elsa             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_putchar(char c)
+void	ft_putchar(char c, int *count)
 {
+	(*count)++;
 	write(1, &c, 1);
-	return (1);
 }
 
-int	ft_putstr(char *str)
+void	ft_putstr(char *str, int *count)
 {
 	int	i;
 
@@ -27,88 +27,72 @@ int	ft_putstr(char *str)
 		str = "(null)";
 	while (str[i])
 	{
-		write(1, &str[i], 1);
+		ft_putchar(str[i], count);
 		i++;
 	}
-	return (i);
 }
 
-int	ft_putadress(char *ptr)
+void	ft_putadress(char *ptr, int *count)
 {
 	unsigned long long	adress;
-	int					count;
 
 	if (ptr == NULL)
-		return (ft_putstr("0x0"));
+	{
+		ft_putstr("0x0", count);
+		return ;
+	}
 	adress = (unsigned long long)ptr;
-	count = 0;
-	count += ft_putstr("0x");
-	count += ft_putnbr_base_ull(adress, 16, "0123456789abcdef");
-	return (count);
+	ft_putstr("0x", count);
+	ft_putnbr_base_ull(adress, 16, "0123456789abcdef", count);
 }
 
-int	ft_putnbr(int nb)
+void	ft_putnbr(int nb, int *count)
 {
-	char	nbr[10];
-	int		i;
-	int		count;
+	char			nbr[10];
+	int				i;
+	unsigned int	unb;
 
 	i = 0;
-	count = 0;
-	if (nb == -2147483648)
-		return(write(1, "-2147483648", 11));
-	else if (nb < 0)
-	{
-		ft_putchar('-');
-		nb = -nb;
-		count++;
-	}
-	else if (nb == 0)
-	{
-		ft_putchar(nb + '0');
-		return (count = 1);
-	}
-	while (nb > 0)
-	{
-		nbr[i] = (nb % 10) + '0';
-		nb = nb / 10;
-		i++;
-	}
-	count += i;
-	i--;
-	while (i >= 0)
-	{
-		ft_putchar(nbr[i]);
-		i--;
-	}
-	return (count);
-}
-
-int	ft_putunsigned_int(unsigned int nb)
-{
-	char	nbr[10];
-	int		i;
-	int		count;
-
-	i = 0;
-	count = 0;
 	if (nb == 0)
+		ft_putchar(nb + '0', count);
+	if (nb < 0)
+		ft_putchar('-', count);
+	if (nb == -2147483648 || nb >= 0)
+		unb = nb;
+	else
+		unb = -nb;
+	while (unb > 0)
 	{
-		ft_putchar(nb + '0');
-		return (count = 1);
+		nbr[i] = (unb % 10) + '0';
+		unb = unb / 10;
+		i++;
 	}
+	i--;
+	while (i >= 0)
+	{
+		ft_putchar(nbr[i], count);
+		i--;
+	}
+}
+
+void	ft_putunsigned_int(unsigned int nb, int *count)
+{
+	char	nbr[10];
+	int		i;
+
+	i = 0;
+	if (nb == 0)
+		ft_putchar(nb + '0', count);
 	while (nb > 0)
 	{
 		nbr[i] = (nb % 10) + '0';
 		nb = nb / 10;
 		i++;
 	}
-	count += i;
 	i--;
 	while (i >= 0)
 	{
-		ft_putchar(nbr[i]);
+		ft_putchar(nbr[i], count);
 		i--;
 	}
-	return (count);
 }

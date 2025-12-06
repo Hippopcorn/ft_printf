@@ -6,7 +6,7 @@
 /*   By: elsa <elsa@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 13:42:04 by evarache          #+#    #+#             */
-/*   Updated: 2025/12/06 12:39:39 by elsa             ###   ########.fr       */
+/*   Updated: 2025/12/06 17:33:39 by elsa             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,30 +21,26 @@ static char	type_convert(char c)
 	return (0);
 }
 
-static int	call_print_convert(va_list *args, char c)
+static void	call_print_convert(va_list *args, char c, int *count)
 {
-	int	count;
-
-	count = 0;
 	if (c == 'c')
-		count += ft_putchar((char)(va_arg(*args, int)));
+		ft_putchar((char)(va_arg(*args, int)), count);
 	else if (c == 's')
-		count += ft_putstr(va_arg(*args, char *));
+		ft_putstr(va_arg(*args, char *), count);
 	else if (c == 'p')
-		count += ft_putadress(va_arg(*args, void *));
+		ft_putadress(va_arg(*args, void *), count);
 	else if (c == 'd' || c == 'i')
-		count += ft_putnbr(va_arg(*args, int));
+		ft_putnbr(va_arg(*args, int), count);
 	else if (c == 'u')
-		count += ft_putunsigned_int(va_arg(*args, unsigned int));
+		ft_putunsigned_int(va_arg(*args, unsigned int), count);
 	else if (c == 'x')
-		count += ft_putnbr_base_hexa(va_arg(*args, unsigned int),
-				16, "0123456789abcdef");
+		ft_putnbr_base_hexa(va_arg(*args, unsigned int),
+				16, "0123456789abcdef", count);
 	else if (c == 'X')
-		count += ft_putnbr_base_hexa(va_arg(*args, unsigned int),
-				16, "0123456789ABCDEF");
+		ft_putnbr_base_hexa(va_arg(*args, unsigned int),
+				16, "0123456789ABCDEF", count);
 	else if (c == '%')
-		count += ft_putchar('%');
-	return (count);
+		ft_putchar('%', count);
 }
 
 int	ft_printf(const char *format, ...)
@@ -63,14 +59,14 @@ int	ft_printf(const char *format, ...)
 			i++;
 			if (type_convert(format[i]))
 			{
-				count_nb_print += call_print_convert(&args, format[i++]);
+				call_print_convert(&args, format[i++], &count_nb_print);
 				continue ;
 			}
 		}
 		else
-			ft_putchar(format[i]);
+			ft_putchar(format[i], &count_nb_print);
 		i++;
-		count_nb_print++;
+		//count_nb_print++;
 	}
 	va_end(args);
 	return (count_nb_print);
