@@ -1,67 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_utils.c                                  :+:      :+:    :+:   */
+/*   ft_putnbr_base.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: elsa <elsa@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/04 09:12:41 by elsa              #+#    #+#             */
-/*   Updated: 2025/12/06 12:46:07 by elsa             ###   ########.fr       */
+/*   Created: 2025/12/06 12:33:04 by elsa              #+#    #+#             */
+/*   Updated: 2025/12/06 12:35:05 by elsa             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_putchar(char c)
+int	ft_putnbr_base_hexa(unsigned int nb, int length_base, char *base)
 {
-	write(1, &c, 1);
-	return (1);
-}
-
-int	ft_putstr(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (str == NULL)
-		str = "(null)";
-	while (str[i])
-	{
-		write(1, &str[i], 1);
-		i++;
-	}
-	return (i);
-}
-
-int	ft_putadress(char *ptr)
-{
-	unsigned long long	adress;
-	int					count;
-
-	if (ptr == NULL)
-		return (ft_putstr("0x0"));
-	adress = (unsigned long long)ptr;
-	count = 0;
-	count += ft_putstr("0x");
-	count += ft_putnbr_base_ull(adress, 16, "0123456789abcdef");
-	return (count);
-}
-
-int	ft_putnbr(int nb)
-{
-	char	nbr[10];
+	char	nbr[100];
 	int		i;
 	int		count;
 
 	i = 0;
 	count = 0;
-	if (nb == -2147483648)
-		return(write(1, "-2147483648", 11));
-	else if (nb < 0)
+	if (nb < 0)
 	{
 		ft_putchar('-');
+		count ++;
 		nb = -nb;
-		count++;
 	}
 	else if (nb == 0)
 	{
@@ -70,8 +33,8 @@ int	ft_putnbr(int nb)
 	}
 	while (nb > 0)
 	{
-		nbr[i] = (nb % 10) + '0';
-		nb = nb / 10;
+		nbr[i] = base[(nb % length_base)];
+		nb = nb / length_base;
 		i++;
 	}
 	count += i;
@@ -84,23 +47,29 @@ int	ft_putnbr(int nb)
 	return (count);
 }
 
-int	ft_putunsigned_int(unsigned int nb)
+int	ft_putnbr_base_ull(unsigned long long nb, int length_base, char *base)
 {
-	char	nbr[10];
+	char	nbr[100];
 	int		i;
 	int		count;
 
 	i = 0;
 	count = 0;
-	if (nb == 0)
+	if (nb < 0)
+	{
+		ft_putchar('-');
+		count ++;
+		nb = -nb;
+	}
+	else if (nb == 0)
 	{
 		ft_putchar(nb + '0');
 		return (count = 1);
 	}
 	while (nb > 0)
 	{
-		nbr[i] = (nb % 10) + '0';
-		nb = nb / 10;
+		nbr[i] = base[(nb % length_base)];
+		nb = nb / length_base;
 		i++;
 	}
 	count += i;

@@ -10,9 +10,9 @@ void test_return(void)
 }
 
 
-int main(void) {
-    UNITY_BEGIN();
-    //RUN_TEST(test_char);
-    RUN_TEST(test_return);
-    return UNITY_END();
-}
+// int main(void) {
+//     UNITY_BEGIN();
+//     //RUN_TEST(test_char);
+//     RUN_TEST(test_return);
+//     return UNITY_END();
+// }

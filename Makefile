@@ -3,33 +3,22 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: evarache <evarache@student.42lyon.fr>      +#+  +:+       +#+         #
+#    By: elsa <elsa@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/13 11:40:40 by evarache          #+#    #+#              #
-#    Updated: 2025/12/05 16:16:50 by evarache         ###   ########.fr        #
+#    Updated: 2025/12/06 12:40:39 by elsa             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-SOURCES = ft_printf.c ft_printf_utils.c
+SOURCES = ft_printf.c ft_printf_utils.c ft_putnbr_base.c
 OBJECTS = $(SOURCES:.c=.o)
 NAME = libftprintf.a
-# NAME = printf
 
-# LIBFT_DIR = libft
-# LIBFT = $(LIBFT_DIR)/libft.a
-
-# Compile la libft via SON Makefile
-# $(LIBFT):
-# 	$(MAKE) -C $(LIBFT_DIR)
-# all: $(NAME) $(LIBFT)
-
-# $(NAME): $(OBJECTS)
-# 	$(CC) -o $@ $^
+all: $(NAME)
 
 $(NAME): $(OBJECTS)
-# 	cp $(LIBFT) $(NAME)
 	ar rcs $(NAME) $(OBJECTS)
 
 %.o: %.c
@@ -37,11 +26,9 @@ $(NAME): $(OBJECTS)
 
 clean:
 	rm -f $(OBJECTS)
-# 	$(MAKE) -C $(LIBFT_DIR) clean
 	
 fclean: clean
 	rm -f $(NAME)
-# 	$(MAKE) -C $(LIBFT_DIR) fclean
 	
 re: fclean all
 
