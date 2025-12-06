@@ -6,7 +6,7 @@
 /*   By: elsa <elsa@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 13:42:04 by evarache          #+#    #+#             */
-/*   Updated: 2025/12/06 17:33:39 by elsa             ###   ########.fr       */
+/*   Updated: 2025/12/06 18:42:35 by elsa             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ static void	call_print_convert(va_list *args, char c, int *count)
 		ft_putunsigned_int(va_arg(*args, unsigned int), count);
 	else if (c == 'x')
 		ft_putnbr_base_hexa(va_arg(*args, unsigned int),
-				16, "0123456789abcdef", count);
+			16, "0123456789abcdef", count);
 	else if (c == 'X')
 		ft_putnbr_base_hexa(va_arg(*args, unsigned int),
-				16, "0123456789ABCDEF", count);
+			16, "0123456789ABCDEF", count);
 	else if (c == '%')
 		ft_putchar('%', count);
 }
@@ -66,12 +66,7 @@ int	ft_printf(const char *format, ...)
 		else
 			ft_putchar(format[i], &count_nb_print);
 		i++;
-		//count_nb_print++;
 	}
 	va_end(args);
 	return (count_nb_print);
 }
-// int main()
-// {
-// 	ft_printf("char");
-// }
